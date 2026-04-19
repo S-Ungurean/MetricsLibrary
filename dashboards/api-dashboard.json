@@ -57,7 +57,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "api_request_count_total{status=\"success\", deployment_environment=~\"$environment\", service_name=~\"$service\"}",
+          "expr": "increase(api_request_count_total{status=\"success\", deployment_environment=~\"$environment\", service_name=~\"$service\"}[5m])",
           "legendFormat": "{{operation}}",
           "refId": "A"
         }
@@ -78,7 +78,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "api_request_count_total{status=\"failure\", deployment_environment=~\"$environment\", service_name=~\"$service\"}",
+          "expr": "increase(api_request_count_total{status=\"failure\", deployment_environment=~\"$environment\", service_name=~\"$service\"}[5m])",
           "legendFormat": "{{operation}}",
           "refId": "A"
         }
