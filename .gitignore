@@ -1,0 +1,17 @@
+# Java build output
+/build/
+/out/
+/bin/
+lib/bin/
+
+# Ignore Gradle project-specific cache directory
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Ignore logs
+*.log
+
+# VS Code
+.vscode/
