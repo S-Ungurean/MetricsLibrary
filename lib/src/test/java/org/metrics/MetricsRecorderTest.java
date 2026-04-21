@@ -33,12 +33,51 @@ public class MetricsRecorderTest {
     }
 
     @Test
-    void recordCount_failureIncrementsFailureCounter() {
+    void recordCount_falseIncrementsServerErrorCounter() {
         recorder.recordCount("query", false);
 
         Counter counter = registry.find("api.request.count")
                 .tag("operation", "query")
-                .tag("status", "failure")
+                .tag("status", "server_error")
+                .counter();
+
+        assertNotNull(counter);
+        assertEquals(1.0, counter.count());
+    }
+
+    @Test
+    void recordCount_stringStatus_clientError() {
+        recorder.recordCount("upload", "client_error");
+
+        Counter counter = registry.find("api.request.count")
+                .tag("operation", "upload")
+                .tag("status", "client_error")
+                .counter();
+
+        assertNotNull(counter);
+        assertEquals(1.0, counter.count());
+    }
+
+    @Test
+    void recordCount_stringStatus_serverError() {
+        recorder.recordCount("query", "server_error");
+
+        Counter counter = registry.find("api.request.count")
+                .tag("operation", "query")
+                .tag("status", "server_error")
+                .counter();
+
+        assertNotNull(counter);
+        assertEquals(1.0, counter.count());
+    }
+
+    @Test
+    void recordCount_stringStatus_success() {
+        recorder.recordCount("presign", "success");
+
+        Counter counter = registry.find("api.request.count")
+                .tag("operation", "presign")
+                .tag("status", "success")
                 .counter();
 
         assertNotNull(counter);
@@ -58,27 +97,6 @@ public class MetricsRecorderTest {
 
         assertNotNull(counter);
         assertEquals(3.0, counter.count());
-    }
-
-    @Test
-    void recordCount_successAndFailureAreIndependentCounters() {
-        recorder.recordCount("download", true);
-        recorder.recordCount("download", false);
-        recorder.recordCount("download", false);
-
-        Counter success = registry.find("api.request.count")
-                .tag("operation", "download")
-                .tag("status", "success")
-                .counter();
-        Counter failure = registry.find("api.request.count")
-                .tag("operation", "download")
-                .tag("status", "failure")
-                .counter();
-
-        assertNotNull(success);
-        assertNotNull(failure);
-        assertEquals(1.0, success.count());
-        assertEquals(2.0, failure.count());
     }
 
     @Test

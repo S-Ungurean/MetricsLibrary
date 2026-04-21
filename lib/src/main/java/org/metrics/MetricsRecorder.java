@@ -18,15 +18,21 @@ public class MetricsRecorder {
     }
 
     /**
-     * Increments a success or failure counter for the given operation.
+     * Increments a counter for the given operation with an explicit status.
+     * status should be "success", "client_error" (4xx), or "server_error" (5xx).
      * Emits: api_request_count_total{operation, status}
      */
-    public void recordCount(String operation, boolean success) {
+    public void recordCount(String operation, String status) {
         Counter.builder("api.request.count")
             .tag("operation", operation)
-            .tag("status", success ? "success" : "failure")
+            .tag("status", status)
             .register(registry)
             .increment();
+    }
+
+    // Convenience overload — false maps to server_error (unexpected failures)
+    public void recordCount(String operation, boolean success) {
+        recordCount(operation, success ? "success" : "server_error");
     }
 
     /**

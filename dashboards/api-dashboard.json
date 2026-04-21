@@ -65,22 +65,28 @@
     },
     {
       "id": 2,
-      "title": "Total Failed Requests",
+      "title": "Failed Requests — 4xx vs 5xx",
       "type": "timeseries",
       "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "color": { "mode": "fixed", "fixedColor": "red" }
+          "color": { "mode": "palette-classic" }
         }
       },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "increase(api_request_count_total{status=\"failure\", deployment_environment=~\"$environment\", service_name=~\"$service\"}[5m])",
-          "legendFormat": "{{operation}}",
+          "expr": "increase(api_request_count_total{status=\"client_error\", deployment_environment=~\"$environment\", service_name=~\"$service\"}[5m])",
+          "legendFormat": "4xx — {{operation}}",
           "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "increase(api_request_count_total{status=\"server_error\", deployment_environment=~\"$environment\", service_name=~\"$service\"}[5m])",
+          "legendFormat": "5xx — {{operation}}",
+          "refId": "B"
         }
       ]
     },
@@ -111,7 +117,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-          "expr": "100 * sum(api_request_count_total{status=\"success\", deployment_environment=~\"$environment\", service_name=~\"$service\"}) / (sum(api_request_count_total{status=\"success\", deployment_environment=~\"$environment\", service_name=~\"$service\"}) + (sum(api_request_count_total{status=\"failure\", deployment_environment=~\"$environment\", service_name=~\"$service\"}) or vector(0)))",
+          "expr": "100 * sum(api_request_count_total{status=\"success\", deployment_environment=~\"$environment\", service_name=~\"$service\"}) / (sum(api_request_count_total{status=\"success\", deployment_environment=~\"$environment\", service_name=~\"$service\"}) + (sum(api_request_count_total{status=\"server_error\", deployment_environment=~\"$environment\", service_name=~\"$service\"}) or vector(0)))",
           "legendFormat": "availability",
           "refId": "A"
         }
