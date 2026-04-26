@@ -71,7 +71,7 @@
       "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
       "targets": [
         {
-          "expr": "sum(rate({job=\"nginx\", environment=\"$environment\"}[1m]))",
+          "expr": "sum(rate({job=\"nginx\", environment=\"$environment\"} |= \"/v1/\" [1m]))",
           "legendFormat": "requests/s",
           "queryType": "range"
         }
@@ -91,7 +91,7 @@
       "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
       "targets": [
         {
-          "expr": "sum(rate({job=\"nginx\", environment=\"$environment\", status=\"429\"}[1m]))",
+          "expr": "sum(rate({job=\"nginx\", environment=\"$environment\", status=\"429\"} |= \"/v1/\" [1m]))",
           "legendFormat": "429/s",
           "queryType": "range"
         }
@@ -111,7 +111,7 @@
       "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
       "targets": [
         {
-          "expr": "sum by (status) (rate({job=\"nginx\", environment=\"$environment\"}[1m]))",
+          "expr": "sum by (status) (rate({job=\"nginx\", environment=\"$environment\"} |= \"/v1/\" [1m]))",
           "legendFormat": "{{status}}",
           "queryType": "range"
         }
@@ -131,7 +131,7 @@
       "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
       "targets": [
         {
-          "expr": "sum by (status) (count_over_time({job=\"nginx\", environment=\"$environment\"}[1h]))",
+          "expr": "sum by (status) (count_over_time({job=\"nginx\", environment=\"$environment\"} |= \"/v1/\" [1h]))",
           "legendFormat": "{{status}}",
           "queryType": "instant"
         }
@@ -145,7 +145,7 @@
       "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"nginx\", environment=\"$environment\"}[$__range]))",
+          "expr": "sum(count_over_time({job=\"nginx\", environment=\"$environment\"} |= \"/v1/\" [$__range]))",
           "queryType": "instant"
         }
       ],
@@ -161,7 +161,7 @@
       "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"nginx\", environment=\"$environment\", status=\"429\"}[$__range]))",
+          "expr": "sum(count_over_time({job=\"nginx\", environment=\"$environment\", status=\"429\"} |= \"/v1/\" [$__range]))",
           "queryType": "instant"
         }
       ],
@@ -177,7 +177,7 @@
       "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"nginx\", environment=\"$environment\", status=\"429\"}[$__range])) / sum(count_over_time({job=\"nginx\", environment=\"$environment\"}[$__range])) * 100",
+          "expr": "sum(count_over_time({job=\"nginx\", environment=\"$environment\", status=\"429\"} |= \"/v1/\" [$__range])) / sum(count_over_time({job=\"nginx\", environment=\"$environment\"} |= \"/v1/\" [$__range])) * 100",
           "queryType": "instant"
         }
       ],
@@ -204,7 +204,7 @@
       "datasource": { "type": "loki", "uid": "${DS_LOKI}" },
       "targets": [
         {
-          "expr": "sum by (method) (rate({job=\"nginx\", environment=\"$environment\"}[1m]))",
+          "expr": "sum by (method) (rate({job=\"nginx\", environment=\"$environment\"} |= \"/v1/\" [1m]))",
           "legendFormat": "{{method}}",
           "queryType": "range"
         }
